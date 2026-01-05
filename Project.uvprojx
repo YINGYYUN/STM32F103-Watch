@@ -660,6 +660,26 @@
               <FileType>5</FileType>
               <FilePath>.\System\Delay.h</FilePath>
             </File>
+            <File>
+              <FileName>MyRTC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\MyRTC.h</FilePath>
+            </File>
+            <File>
+              <FileName>MyRTC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\MyRTC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Timer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -684,6 +704,36 @@
               <FileName>OLED_Data.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\OLED_Data.h</FilePath>
+            </File>
+            <File>
+              <FileName>LED.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\LED.h</FilePath>
+            </File>
+            <File>
+              <FileName>LED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\LED.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\menu.h</FilePath>
+            </File>
+            <File>
+              <FileName>Key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Key.h</FilePath>
+            </File>
+            <File>
+              <FileName>Key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Key.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -560,6 +560,7 @@ void OLED_ReverseArea(int16_t X, int16_t Y, uint8_t Width, uint8_t Height)
   * 参    数：FontSize 指定字体大小
   *           范围：OLED_8X16		宽8像素，高16像素
   *                 OLED_6X8		宽6像素，高8像素
+  *  				OLED_12X24		宽12像素，高24像素				
   * 返 回 值：无
   * 说    明：调用此函数后，要想真正地呈现在屏幕上，还需调用更新函数
   */
@@ -574,6 +575,11 @@ void OLED_ShowChar(int16_t X, int16_t Y, char Char, uint8_t FontSize)
 	{
 		/*将ASCII字模库OLED_F6x8的指定数据以6*8的图像格式显示*/
 		OLED_ShowImage(X, Y, 6, 8, OLED_F6x8[Char - ' ']);
+	}
+	else if(FontSize == OLED_12X24)	//字体为宽12像素，高24像素
+	{
+		/*将ASCII字模库OLED_F12x24的指定数据以12*24的图像格式显示*/
+		OLED_ShowImage(X, Y, 12, 24, OLED_F12x24[Char - ' ']);
 	}
 }
 
