@@ -40,7 +40,7 @@ void Show_Clock_UI(void)
 //设置		2
 uint8_t clkflag = 1;
 
-uint8_t First_Page_Clock(void)
+int First_Page_Clock(void)
 {
 	while(1)
 	{
@@ -106,7 +106,8 @@ void Show_SettingPage_UI(void)
 
 //设置界面选项标志位
 uint8_t setflag = 1;
-uint8_t SettingPage(void)
+
+int SettingPage(void)
 {
 	while(1)
 	{
@@ -177,3 +178,136 @@ uint8_t SettingPage(void)
 	}
 }
 /*--------------------[E] 设置界面 [E]--------------------*/
+
+/*--------------------[S] 滑动菜单界面 [S]--------------------*/
+
+//上次选择的选项
+uint8_t pre_selection = 0;
+//目标选项
+uint8_t targrt_selection;
+//上次选项的x坐标
+uint8_t x_pre = 48;
+//图标移动速度
+uint8_t Speed = 4;
+//移动标志位;1开始，0停止
+uint8_t move_flag;
+
+//滑动菜单动画函数
+void Menu_Animation(void)
+{
+	OLED_Clear();
+	OLED_ShowImage(42, 10, 44, 44, Frame);
+	
+	if (pre_selection < targrt_selection)
+	{
+		x_pre -= Speed;
+		//前一个图标左移到左边缘
+		if (x_pre == 0)
+		{
+			pre_selection ++;
+			move_flag = 0;
+			x_pre = 48;
+		}
+	}
+	if (pre_selection > targrt_selection)
+	{
+		x_pre += Speed;
+		//前一个图标右移到右边缘
+		if (x_pre == 96)
+		{
+			pre_selection --;
+			move_flag = 0;
+			x_pre = 48;
+		}
+	}
+	if (pre_selection >= 1)
+	{
+		OLED_ShowImage(x_pre - 48, 16, 32, 32, Menu_Graph[pre_selection - 1]);
+	}
+	if (pre_selection >= 2)
+	{
+		OLED_ShowImage(x_pre - 96, 16, 32, 32, Menu_Graph[pre_selection - 2]);
+	}
+	OLED_ShowImage(x_pre, 16, 32, 32, Menu_Graph[pre_selection]);
+	OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[pre_selection + 1]);
+	OLED_ShowImage(x_pre + 96, 16, 32, 32, Menu_Graph[pre_selection + 2]);
+	
+	OLED_Update();
+}
+
+void Set_Selection(uint8_t move_flag, uint8_t Pre_Selection, uint8_t Targrt_Selection)
+{
+	if (move_flag == 1)
+	{
+		pre_selection = Pre_Selection;
+		targrt_selection = Targrt_Selection;
+		Menu_Animation();
+	}
+}
+
+uint8_t menu_falg = 1;
+
+int Menu(void)
+{
+	//move_flag=1;DirectFlag=2;使得进入菜单时处在退回键处
+	move_flag = 1;
+	//图标移动标志位；1移动到上一项，2移动到下一项
+	uint8_t DirectFlag = 2;
+	
+	while(1)
+	{
+		//存储确认键被按下时menu_falg的值的临时变量，默认为无效值0
+		uint8_t menu_falg_temp = 0;
+		
+		//上键
+		if (Key_Check(KEY_NAME_UP,KEY_SINGLE))
+		{
+			DirectFlag = 1;
+			move_flag = 1;
+			
+			menu_falg --;
+			if (menu_falg <= 0) menu_falg = 7;
+		}
+		//下键
+		else if (Key_Check(KEY_NAME_DOWN,KEY_SINGLE))
+		{
+			DirectFlag = 2;
+			move_flag = 1;
+			
+			menu_falg ++;
+			if (menu_falg >= 8) menu_falg = 1;
+		}
+		//确认键
+		else if (Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))
+		{
+			//清屏OLED，准备跳转
+			OLED_Clear();
+			OLED_Update();
+			
+			menu_falg_temp = menu_falg;
+		}
+		
+		//返回上一级菜单
+		if (menu_falg_temp == 1){return 0;}
+		//
+		else if (menu_falg_temp == 2){}
+		else if (menu_falg_temp == 3){}
+		else if (menu_falg_temp == 4){}
+		else if (menu_falg_temp == 5){}
+		else if (menu_falg_temp == 6){}
+		else if (menu_falg_temp == 7){}
+		
+		if (menu_falg == 1)
+		{
+			if (DirectFlag == 1)Set_Selection(move_flag, 1, 0);
+			else if (DirectFlag == 2)Set_Selection(move_flag, 0, 0);
+		}
+		else
+		{
+			if (DirectFlag == 1)Set_Selection(move_flag, menu_falg, menu_falg - 1);
+			else if (DirectFlag == 2)Set_Selection(move_flag, menu_falg - 2, menu_falg - 1);
+		}
+
+	}
+}
+/*--------------------[E] 滑动菜单界面 [E]--------------------*/

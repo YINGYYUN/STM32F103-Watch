@@ -27,6 +27,8 @@ typedef struct
 extern const uint8_t OLED_F8x16[][16];
 extern const uint8_t OLED_F6x8[][6];
 extern const uint8_t OLED_F12x24[][36];
+extern const uint8_t Menu_Graph[][128];
+extern const uint8_t Frame[];
 
 /*汉字字模数据声明*/
 extern const ChineseCell_t OLED_CF16x16[];

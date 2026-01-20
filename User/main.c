@@ -22,7 +22,7 @@ int main(void)
 	{
 		clkflag1 = First_Page_Clock();
 		//跳转到菜单
-		if (clkflag1 == 1){}
+		if (clkflag1 == 1){Menu();}
 		//跳转到设置
 		else if (clkflag1 == 2){SettingPage();}
 	}
