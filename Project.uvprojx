@@ -755,6 +755,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\SetBrightness.h</FilePath>
             </File>
+            <File>
+              <FileName>StopWatch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\StopWatch.c</FilePath>
+            </File>
+            <File>
+              <FileName>StopWatch.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\StopWatch.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
