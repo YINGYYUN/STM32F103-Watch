@@ -221,6 +221,7 @@ void Menu_Animation(void)
 			x_pre = 48;
 		}
 	}
+	
 	if (pre_selection >= 1)
 	{
 		OLED_ShowImage(x_pre - 48, 16, 32, 32, Menu_Graph[pre_selection - 1]);
@@ -230,11 +231,7 @@ void Menu_Animation(void)
 		OLED_ShowImage(x_pre - 96, 16, 32, 32, Menu_Graph[pre_selection - 2]);
 	}
 	OLED_ShowImage(x_pre, 16, 32, 32, Menu_Graph[pre_selection]);
-	
-	if (x_pre <= 49)
-	{
-		OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[pre_selection + 1]);
-	}
+	OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[pre_selection + 1]);
 	OLED_ShowImage(x_pre + 96, 16, 32, 32, Menu_Graph[pre_selection + 2]);
 	
 	OLED_Update();
