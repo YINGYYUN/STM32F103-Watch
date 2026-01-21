@@ -24,7 +24,9 @@ Listings/
 *.lnp
 
 # 5. 本地 IDE/工具生成文件（按需开启）
-*.uvoptx
 .vscode/
 .idea/
 RTE/
+Project.uvguix.HP
+Project.uvguix.Admin
+Project.uvoptx
