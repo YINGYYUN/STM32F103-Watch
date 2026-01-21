@@ -6,6 +6,7 @@
 #include "LED.h"
 #include "Key.h"
 #include "SetTime.h"					//日期时间设置模块
+#include "SetBrightness.h"				//亮度设置模块
 
 /*--------------------[S] 外设初始化 [S]--------------------*/
 
@@ -101,7 +102,7 @@ void Show_SettingPage_UI(void)
 {
 	OLED_ShowImage(0, 0, 16, 16, Return);
 	OLED_ShowString(0, 16, "日期时间设置", OLED_8X16);
-//	OLED_ShowString(0, 32, "亮度设置", OLED_8X16);
+	OLED_ShowString(0, 32, "亮度设置", OLED_8X16);
 }
 
 //设置界面选项标志位
@@ -118,15 +119,13 @@ int SettingPage(void)
 		if (Key_Check(KEY_NAME_UP,KEY_SINGLE))
 		{
 			setflag --;
-			if (setflag <= 0) setflag = 2;
-//			if (setflag <= 0) setflag = 3;
+			if (setflag <= 0) setflag = 3;
 		}
 		//下键
 		else if (Key_Check(KEY_NAME_DOWN,KEY_SINGLE))
 		{
 			setflag ++;
-			if (setflag >= 3) setflag = 1;
-//			if (setflag >= 4) setflag = 1;
+			if (setflag >= 4) setflag = 1;
 		}
 		//确认键
 		else if (Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))
@@ -142,6 +141,8 @@ int SettingPage(void)
 		if (setflag_temp == 1){return 0;}
 		//进入日期时间设置界面
 		else if (setflag_temp == 2){SetTime();}
+		//进入屏幕亮度设置界面
+		else if (setflag_temp == 3){SetBrightness();}
 		
 		switch(setflag)
 		{
@@ -164,14 +165,14 @@ int SettingPage(void)
 				break;
 			}
 			//光标在第三行"亮度设置"选项
-//			case 3:
-//			{
-//				Show_SettingPage_UI();
-//				OLED_ReverseArea(0, 32, 64, 16);
-//				OLED_Update();
-//				
-//				break;
-//			}
+			case 3:
+			{
+				Show_SettingPage_UI();
+				OLED_ReverseArea(0, 32, 64, 16);
+				OLED_Update();
+				
+				break;
+			}
 			
 			
 		}

@@ -745,6 +745,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\SetTime.h</FilePath>
             </File>
+            <File>
+              <FileName>SetBrightness.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\SetBrightness.c</FilePath>
+            </File>
+            <File>
+              <FileName>SetBrightness.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\SetBrightness.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

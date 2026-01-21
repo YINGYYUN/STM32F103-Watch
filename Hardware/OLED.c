@@ -278,7 +278,7 @@ void OLED_Init(void)
 	OLED_WriteCommand(0x12);
 	
 	OLED_WriteCommand(0x81);	//设置对比度
-	OLED_WriteCommand(0xCF);	//0x00~0xFF
+	OLED_WriteCommand(0xC8);	//0x00~0xFF
 
 	OLED_WriteCommand(0xD9);	//设置预充电周期
 	OLED_WriteCommand(0xF1);

@@ -31,6 +31,9 @@
 /*初始化函数*/
 void OLED_Init(void);
 
+/*寄存器写入函数*/
+void OLED_WriteCommand(uint8_t Command);
+
 /*更新函数*/
 void OLED_Update(void);
 void OLED_UpdateArea(int16_t X, int16_t Y, uint8_t Width, uint8_t Height);
