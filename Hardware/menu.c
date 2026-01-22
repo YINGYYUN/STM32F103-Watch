@@ -197,7 +197,7 @@ uint8_t Speed = 4;
 //移动标志位;1开始，0停止
 uint8_t move_flag;
 //菜单选项数目(包括返回键)
-uint8_t num_selection = 7;
+#define NUM_SELECTION		7
 
 //滑动菜单动画函数
 void Menu_Animation(void)
@@ -205,7 +205,7 @@ void Menu_Animation(void)
 	OLED_Clear();
 	OLED_ShowImage(42, 10, 44, 44, Frame);
 	//倒数第一个图标到第一个图标
-	if (pre_selection == num_selection -1 && targrt_selection == 0)
+	if (pre_selection == NUM_SELECTION -1 && targrt_selection == 0)
 	{
 		x_pre -= Speed;
 		if (x_pre == 0)
@@ -216,12 +216,12 @@ void Menu_Animation(void)
 		}
 	}
 	//第一个图标到倒数第一个图标
-	else if (pre_selection == 0 && targrt_selection == num_selection -1)
+	else if (pre_selection == 0 && targrt_selection == NUM_SELECTION -1)
 	{
 		x_pre += Speed;
 		if (x_pre >= 96)
 		{
-			pre_selection = num_selection -1;
+			pre_selection = NUM_SELECTION -1;
 			move_flag = 0;
 			x_pre = 48;
 		}
@@ -249,48 +249,17 @@ void Menu_Animation(void)
 		}
 	}
 	
-	if (pre_selection >= 2)
-	{
-		OLED_ShowImage(x_pre - 96, 16, 32, 32, Menu_Graph[pre_selection - 2]);
-	}
-	//第一二个图标的前两个图标
-	else
-	{
-		OLED_ShowImage(x_pre - 96, 16, 32, 32, Menu_Graph[pre_selection - 2 + num_selection]);
-	}
-	
-	if (pre_selection >= 1)
-	{
-		OLED_ShowImage(x_pre - 48, 16, 32, 32, Menu_Graph[pre_selection - 1]);
-	}
-	//第一个图标的前一个图标
-	else
-	{
-		OLED_ShowImage(x_pre - 48, 16, 32, 32, Menu_Graph[num_selection - 1]);
-	}
-	
+	//前二的图标
+	OLED_ShowImage(x_pre - 96, 16, 32, 32, Menu_Graph[(pre_selection - 2 + NUM_SELECTION) % NUM_SELECTION ]);
+	//前一的图标
+	OLED_ShowImage(x_pre - 48, 16, 32, 32, Menu_Graph[(pre_selection - 1 + NUM_SELECTION) % NUM_SELECTION ]);
+	//当前的图标
 	OLED_ShowImage(x_pre, 16, 32, 32, Menu_Graph[pre_selection]);
-	
-	if (pre_selection <= num_selection - 2)
-	{
-		OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[pre_selection + 1]);
-	}
-	//倒数第一个图标的后一个图标
-	else
-	{
-		OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[0]);
-	}
-	
-	if (pre_selection <= num_selection - 3)
-	{
-		OLED_ShowImage(x_pre + 96, 16, 32, 32, Menu_Graph[pre_selection + 2]);
-	}
-	//倒数第一二个图标的后两个图标
-	else
-	{
-		OLED_ShowImage(x_pre + 96, 16, 32, 32, Menu_Graph[pre_selection + 2 - num_selection]);
-	}
-	
+	//后一的图标
+	OLED_ShowImage(x_pre + 48, 16, 32, 32, Menu_Graph[(pre_selection + 1 + NUM_SELECTION) % NUM_SELECTION ]);
+	//后二的图标
+	OLED_ShowImage(x_pre + 96, 16, 32, 32, Menu_Graph[(pre_selection + 2 + NUM_SELECTION) % NUM_SELECTION ]);
+
 	OLED_Update();
 }
 
@@ -343,7 +312,7 @@ int Menu(void)
 			move_flag = 1;
 			
 			menu_falg --;
-			if (menu_falg <= 0) menu_falg = num_selection;
+			if (menu_falg <= 0) menu_falg = NUM_SELECTION;
 		}
 		//下键
 		else if (Key_Check(KEY_NAME_DOWN,KEY_SINGLE))
@@ -352,7 +321,7 @@ int Menu(void)
 			move_flag = 1;
 			
 			menu_falg ++;
-			if (menu_falg >= num_selection + 1) menu_falg = 1;
+			if (menu_falg >= NUM_SELECTION + 1) menu_falg = 1;
 		}
 		//确认键
 		else if (Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))
@@ -378,17 +347,17 @@ int Menu(void)
 		{
 			if (DirectFlag == 0)Set_Selection(move_flag, 0, 0);
 			if (DirectFlag == 1)Set_Selection(move_flag, 1, 0);
-			else if (DirectFlag == 2)Set_Selection(move_flag, num_selection - 1, 0);
+			else if (DirectFlag == 2)Set_Selection(move_flag, NUM_SELECTION - 1, 0);
 		}
 		else if (menu_falg >= 1 && menu_falg <= 6)
 		{
 			if (DirectFlag == 1)Set_Selection(move_flag, menu_falg, menu_falg - 1);
 			else if (DirectFlag == 2)Set_Selection(move_flag, menu_falg - 2, menu_falg - 1);
 		}
-		else if (menu_falg == num_selection)
+		else if (menu_falg == NUM_SELECTION)
 		{
-			if (DirectFlag == 1)Set_Selection(move_flag, 0, num_selection - 1);
-			else if (DirectFlag == 2)Set_Selection(move_flag, num_selection - 2, num_selection - 1);
+			if (DirectFlag == 1)Set_Selection(move_flag, 0, NUM_SELECTION - 1);
+			else if (DirectFlag == 2)Set_Selection(move_flag, NUM_SELECTION - 2, NUM_SELECTION - 1);
 		}
 
 	}
