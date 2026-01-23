@@ -1,6 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 
 #include "MyRTC.h"
+#include "MPU6050.h"
 
 #include "OLED.h"
 #include "LED.h"
@@ -8,6 +9,7 @@
 #include "SetTime.h"					//[设置]日期时间设置模块
 #include "SetBrightness.h"				//[设置]亮度设置模块
 #include "StopWatch.h"					//[菜单]秒表模块
+#include "MyMPU6050.h"					//[菜单]姿态解算模块
 
 #include "Menu.h"
 
@@ -18,6 +20,7 @@ void Peripheral_Init(void)
 	MyRTC_Init();
 	LED_Init();
 	Key_Init();
+	MPU6050_Init();
 }
 /*--------------------[E] 外设初始化 [E]--------------------*/
 
@@ -338,7 +341,7 @@ int Menu(void)
 		//
 		else if (menu_falg_temp == 2){MenuToFunction();StopWatch();}
 		else if (menu_falg_temp == 3){}
-		else if (menu_falg_temp == 4){}
+		else if (menu_falg_temp == 4){MenuToFunction();MPU6050();}
 		else if (menu_falg_temp == 5){}
 		else if (menu_falg_temp == 6){}
 		else if (menu_falg_temp == 7){}
