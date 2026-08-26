@@ -11,6 +11,7 @@ void Show_Game_UI(void)
 {
 	OLED_ShowImage(  0,  0, 16, 16, Return);
 	OLED_ShowString(  0, 16, "谷歌小恐龙", OLED_8X16);
+	OLED_ShowString(  0, 32, "打砖块", OLED_8X16);
 }
 
 int Game(void)
@@ -29,13 +30,13 @@ int Game(void)
 		if (Key_Check(KEY_NAME_UP,KEY_SINGLE))// 上键
 		{
 			game_flag --;
-			if (game_flag < 1)game_flag = 2;
+			if (game_flag < 1)game_flag = 3;
 			refresh = 1;
 		}
 		else if (Key_Check(KEY_NAME_DOWN,KEY_SINGLE))// 下键
 		{
 			game_flag ++;
-			if (game_flag > 2)game_flag = 1;
+			if (game_flag > 3)game_flag = 1;
 			refresh = 1;
 		}
 		else if(Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))// 确认键
@@ -47,6 +48,7 @@ int Game(void)
 		// 返回上一级菜单
 		if (game_flag_temp == 1){OLED_Clear();return 0;}
 		else if (game_flag_temp == 2){DinoGame_Init();DinoGame();refresh=1;}
+		else if (game_flag_temp == 3){BreakoutGame_Init();BreakoutGame();refresh=1;}
 		
 		/* 显示更新 */
 		if (refresh)
@@ -67,6 +69,15 @@ int Game(void)
 					OLED_Clear();
 					Show_Game_UI();
 					OLED_ReverseArea(  0, 16, 80, 16);
+					OLED_Update();
+					
+					break;
+				}
+				case 3:
+				{
+					OLED_Clear();
+					Show_Game_UI();
+					OLED_ReverseArea(  0, 32, 48, 16);
 					OLED_Update();
 					
 					break;

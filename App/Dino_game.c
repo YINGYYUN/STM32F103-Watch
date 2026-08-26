@@ -18,7 +18,8 @@ struct Object_Position {
 int Score = 0;
 void Show_Score(void)
 {
-	OLED_ShowNum( 98,  0, Score, 5, OLED_6X8);
+	OLED_ShowString(  0,  0, "SCORE", OLED_6X8);
+	OLED_ShowNum(    30,  0, Score, 5, OLED_6X8);
 }
 
 // 地面显示
@@ -153,7 +154,8 @@ int DinoGame(void)
 	
 	while(1)
 	{
-		if (game_stop_flag == 0 && Time_Count1 >= 40) // 1ms * 40 显示周期
+		/* 显示更新 */
+		if (game_stop_flag == 0 && Time_Count1 >= 40) // 1ms * 40 显示更新周期
 		{
 			Time_Count1 = 0;
 			
@@ -166,19 +168,27 @@ int DinoGame(void)
 			Show_Dino();
 			OLED_Update();
 			
-			game_stop_flag = isColliding( &dino, &barrier);
+			if(isColliding( &dino, &barrier) == 1)
+			{
+				game_stop_flag = 1;
+			}
 		}
 		if (game_stop_flag == 1)
 		{	
 			OLED_Clear();
+			Show_Score();
 			OLED_ShowString( 28, 24, "Game Over", OLED_8X16);
-			OLED_ShowString(  6, 45, "Hit any key to exit", OLED_6X8);
+			OLED_ShowString(  6, 45, "Hit confirm to exit", OLED_6X8);
 			OLED_Update();
 			
-			// 按任意键退出
-			if (Key_Check(KEY_NAME_UP,KEY_SINGLE)	||
-				Key_Check(KEY_NAME_DOWN,KEY_SINGLE) ||
-				Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))
+			game_stop_flag = 2;
+		}
+		if (game_stop_flag == 2)
+		{
+			Key_Check(KEY_NAME_UP,KEY_SINGLE);
+			Key_Check(KEY_NAME_DOWN,KEY_SINGLE);
+			// 按确认键退出
+			if (Key_Check(KEY_NAME_COMFIRM,KEY_SINGLE))
 			{
 				OLED_Clear();
 				OLED_Update();
@@ -187,8 +197,8 @@ int DinoGame(void)
 			}
 		}
 		
-		/* 进程节拍 */ 
-		if (Time_Count2 >= 10)
+		/* 物理更新 */ 
+		if (game_stop_flag == 0 && Time_Count2 >= 10) // 1ms * 10 物理更新周期
 		{
 			Time_Count2 -= 10;
 			
@@ -230,7 +240,7 @@ int DinoGame(void)
 	}
 }
 
-// 标志位等变量清零
+/* 初始化游戏 */
 void DinoGame_Init(void)
 {
 	// 分数清零

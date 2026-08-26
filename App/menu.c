@@ -92,6 +92,21 @@ void Show_Battery(void)
 /* 界面样式*/
 void Show_Clock_UI(uint8_t clkflag)
 {
+	// 显示电池电量
+	Show_Battery();
+	// 显示年月日(屏幕左上角)
+	OLED_Printf(  0,  1, OLED_6X8, "%d-%d-%d", MyRTC_Time[0], MyRTC_Time[1], MyRTC_Time[2]);
+	// 显示"菜单"(屏幕左下角)16X16
+	OLED_ShowString(  0, 48, "菜单", OLED_8X16);
+	// 显示"设置"(屏幕右下角)16X16
+	OLED_ShowString( 96, 48, "设置", OLED_8X16);
+	if (clkflag == 1){OLED_ReverseArea(  0, 48, 32, 16);}
+	else {OLED_ReverseArea( 96, 48, 32, 16);}
+	
+	OLED_UpdateArea(  0, 48, 128, 16);
+	OLED_UpdateArea(  0,  0, 60,  8);		// 日期区域, y=1
+	OLED_UpdateArea( 85,  0, 41, 16);		// 电池区域, x:85~125 y:0~15
+	
 	// 读取RTC时间
 	MyRTC_ReadTime();
 		
@@ -103,20 +118,7 @@ void Show_Clock_UI(uint8_t clkflag)
 	OLED_UpdateArea( 16, 16, 96, 24);
 #endif
 	
-		OLED_Clear();
-	// 显示电池电量
-	Show_Battery();
-	// 显示年月日(屏幕左上角)
-	OLED_Printf(  0,  1, OLED_6X8, "%d-%d-%d", MyRTC_Time[0], MyRTC_Time[1], MyRTC_Time[2]);
-	// 显示"菜单"(屏幕左下角)16X16
-	OLED_ShowString(  0, 48, "菜单", OLED_8X16);
-	// 显示"设置"(屏幕右下角)16X16
-	OLED_ShowString( 96, 48, "设置", OLED_8X16);
-	if (clkflag == 1){OLED_ReverseArea(  0, 48, 32, 16);}
-	else {OLED_ReverseArea( 96, 48, 32, 16);}
-	OLED_UpdateArea(  0, 48, 128, 16);
-	OLED_UpdateArea(  0,  0, 60,  8);		// 日期区域, y=1
-	OLED_UpdateArea( 85,  0, 41, 16);		// 电池区域, x:85~125 y:0~15
+	OLED_Clear();
 }
 
 // 首页选项标志位
@@ -127,9 +129,10 @@ uint8_t clkflag = 1;
 /* 交互界面*/
 int First_Page_Clock(void)
 {
+	// 此处使得返回首页时，将先显示时间，后显示其他内容，再进行滚动时间判定
 #if ROLL_CLOCK_ENABLE
+	// 时间滚动显示初始化，和一次静态时间显示
 	Roll_Clock_Init();
-	OLED_UpdateArea( 16, 16, 96, 24);
 #endif	
 	
 	// 时间参考值重置

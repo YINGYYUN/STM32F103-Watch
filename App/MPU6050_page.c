@@ -17,7 +17,7 @@
 void Show_MPU6050_FirstUI(void)
 {
 	OLED_ShowImage(  0,  0, 16, 16, Return);
-	OLED_ShowString( 47, 0, "[校准]", OLED_8X16);
+	OLED_ShowString( 39, 0, "[校准]", OLED_8X16);
 	OLED_ShowString(115, 0, "R", OLED_8X16);
 	OLED_ShowString(  0, 16, "Roll :", OLED_8X16);
 	OLED_ShowString(  0, 32, "Pitch:", OLED_8X16);
@@ -27,7 +27,7 @@ void Show_MPU6050_FirstUI(void)
 void Show_MPU6050_SecondUI(void)
 {
 	OLED_ShowImage(  0,  0, 16, 16, Return);
-	OLED_ShowString( 47,  0, "[校准]", OLED_8X16);
+	OLED_ShowString( 39,  0, "[校准]", OLED_8X16);
 	OLED_ShowString(115, 0, "C", OLED_8X16);
 	OLED_ShowString(  0, 16, "ax:", OLED_6X8);
 	OLED_ShowString(  0, 24, "ay:", OLED_6X8);
@@ -60,8 +60,9 @@ int MPU6050(void)
 	Time_Count1 = 0;
 	Time_Count2 = 0;
 	
-	uint8_t refresh = 1;	// UI刷新标志位
-	uint8_t page = 0;		// 页面
+	uint8_t refresh = 1;			// UI刷新标志位
+	uint8_t page = 0;				// 页面
+	uint8_t cal_progress_bar = 4;	// 零飘校准进度条
 	
 	while(1)
 	{
@@ -92,14 +93,16 @@ int MPU6050(void)
 		// 进行校准
 		else if (mpu6050_flag_temp == 2)
 		{
-			OLED_ShowString( 47,  0, "校准中", OLED_8X16);
+			OLED_ShowString( 39,  0, "校准中", OLED_8X16);
 			OLED_Update();
 	
 			IMU_Gyro_Calib_Start(&gyro_cal);
+			cal_progress_bar = 2;
 
             // 半阻塞式零飘校准
             while(1)
             {
+				
                 if (IMU_Gyro_Calib_Check(&gyro_cal) == GYRO_CALIB_STATE_DONE)  // 零飘校准完成
                 {
                     break;  // 结束零飘校准
@@ -108,6 +111,14 @@ int MPU6050(void)
                 {
                     break;  // 中止零飘校准
                 }        
+				
+				if (gyro_cal.calib_count >= GYRO_CALIB_TARGET_SAMPLES * cal_progress_bar / 100.0)
+				{
+					OLED_ShowString( 39,  0, "校准中", OLED_8X16);
+					OLED_ReverseArea( 39, 0, cal_progress_bar/2, 16);
+					OLED_UpdateArea( 39, 0, 48, 16);
+					cal_progress_bar += 2;
+				}
             }
 			
 			refresh = 1;
@@ -141,7 +152,7 @@ int MPU6050(void)
 						
 						// 光标在"校准"键
 						case 2:
-							OLED_ReverseArea( 47,  0, 48, 16);									
+							OLED_ReverseArea( 39,  0, 48, 16);									
 							break;
 						// 光标在"R/C"键（解算值/原始值 显示切换）
 						case 3:
@@ -171,7 +182,7 @@ int MPU6050(void)
 						
 						// 光标在"校准"键
 						case 2:
-							OLED_ReverseArea( 47,  0, 48, 16);									
+							OLED_ReverseArea( 39,  0, 48, 16);									
 							break;
 						// 光标在"R/C"键（解算值/原始值）
 						case 3:

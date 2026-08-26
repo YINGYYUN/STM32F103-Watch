@@ -14,6 +14,7 @@ Clock Sec;
 Clock Min;
 Clock Hour;
 
+// 赋初值，和一次静态时间显示
 void Roll_Clock_Init(void)
 {
 	MyRTC_ReadTime();
@@ -21,6 +22,7 @@ void Roll_Clock_Init(void)
 	Min.Last=MyRTC_Time[4];
 	Hour.Last=MyRTC_Time[3];
 	OLED_Printf( 16, 16, OLED_12X24 , "%02d:%02d:%02d", MyRTC_Time[3], MyRTC_Time[4], MyRTC_Time[5]);
+	OLED_UpdateArea( 16, 16, 96, 24);
 }
 
 void OLED_Roll(void)
@@ -34,57 +36,55 @@ void OLED_Roll(void)
 	Hour.Ge_Y=16;
 	Hour.Shi_Y=16;
 	
+	// 在缓冲区预填完整的新时间，防止非滚动位因未被循环重绘而残留旧值或空白
+	// 滚动位的新值会在循环第一帧被旧值覆盖，然后通过滚动动画过渡，故不会提前显示
+	OLED_Printf( 16, 16, OLED_12X24 , "%02d:%02d:%02d", MyRTC_Time[3], MyRTC_Time[4], MyRTC_Time[5]);
+	
 	for (uint8_t i=0;i<=24;i++)
 	{
-		OLED_ShowChar( 40, 16, ':', OLED_12X24);
-		OLED_ShowChar( 76, 16, ':', OLED_12X24);
-		
-		OLED_ShowNum(100,Sec.Ge_Y,Sec.Ge_Last, 1, OLED_12X24);
-		OLED_ShowNum(100,Sec.Ge_Y+24,Sec.Ge_New, 1, OLED_12X24);
-		
-		OLED_ShowNum( 88,Sec.Shi_Y,Sec.Shi_Last, 1, OLED_12X24);
-		OLED_ShowNum( 88,Sec.Shi_Y+24,Sec.Shi_New, 1, OLED_12X24);
-		
-		
-		OLED_ShowNum( 64, Min.Ge_Y, Min.Ge_Last, 1, OLED_12X24);
-		OLED_ShowNum( 64, Min.Ge_Y+24, Min.Ge_New, 1, OLED_12X24);
-		
-		OLED_ShowNum( 52, Min.Shi_Y, Min.Shi_Last, 1, OLED_12X24);
-		OLED_ShowNum( 52, Min.Shi_Y+24, Min.Shi_New, 1, OLED_12X24);
-		
-		
-		OLED_ShowNum( 28, Hour.Ge_Y, Hour.Ge_Last, 1, OLED_12X24);
-		OLED_ShowNum( 28, Hour.Ge_Y+24, Hour.Ge_New, 1, OLED_12X24);
-		
-		OLED_ShowNum( 16, Hour.Shi_Y, Hour.Shi_Last, 1, OLED_12X24);
-		OLED_ShowNum( 16, Hour.Shi_Y+24, Hour.Shi_New, 1, OLED_12X24);
-		
-		OLED_UpdateArea(16, 16, 96, 24);
-		
 		if (Sec.Ge_Roll_Flag==1)
 		{
+			OLED_ShowNum(100,Sec.Ge_Y,Sec.Ge_Last, 1, OLED_12X24);
+			OLED_ShowNum(100,Sec.Ge_Y+24,Sec.Ge_New, 1, OLED_12X24);
 			Sec.Ge_Y--;
 		}
+		
 		if (Sec.Shi_Roll_Flag==1)
 		{
+			OLED_ShowNum( 88,Sec.Shi_Y,Sec.Shi_Last, 1, OLED_12X24);
+			OLED_ShowNum( 88,Sec.Shi_Y+24,Sec.Shi_New, 1, OLED_12X24);
 			Sec.Shi_Y--;
 		}
+		
 		if (Min.Ge_Roll_Flag==1)
-		{
+		{	
+			OLED_ShowNum( 64, Min.Ge_Y, Min.Ge_Last, 1, OLED_12X24);
+			OLED_ShowNum( 64, Min.Ge_Y+24, Min.Ge_New, 1, OLED_12X24);
 			Min.Ge_Y--;
 		}
+		
 		if (Min.Shi_Roll_Flag==1)
 		{
+			OLED_ShowNum( 52, Min.Shi_Y, Min.Shi_Last, 1, OLED_12X24);
+			OLED_ShowNum( 52, Min.Shi_Y+24, Min.Shi_New, 1, OLED_12X24);
 			Min.Shi_Y--;
 		}
+		
 		if (Hour.Ge_Roll_Flag==1)
 		{
+			OLED_ShowNum( 28, Hour.Ge_Y, Hour.Ge_Last, 1, OLED_12X24);
+			OLED_ShowNum( 28, Hour.Ge_Y+24, Hour.Ge_New, 1, OLED_12X24);
 			Hour.Ge_Y--;
 		}
+		
 		if (Hour.Shi_Roll_Flag==1)
-		{
+		{	
+			OLED_ShowNum( 16, Hour.Shi_Y, Hour.Shi_Last, 1, OLED_12X24);
+			OLED_ShowNum( 16, Hour.Shi_Y+24, Hour.Shi_New, 1, OLED_12X24);
 			Hour.Shi_Y--;
 		}
+		
+		OLED_UpdateArea(16, 16, 96, 24);
 	}
 	Sec.Ge_Roll_Flag=0;
 	Sec.Shi_Roll_Flag=0;
@@ -101,6 +101,7 @@ void Roll_Clock()
 		Hour.New=MyRTC_Time[3];
 		if (Sec.Last!=Sec.New)
 		{
+			// 新旧值赋值
 			Sec.Ge_Last=Sec.Last%10;
 			Sec.Ge_New=Sec.New%10;
 			Sec.Shi_Last=Sec.Last/10;
@@ -116,22 +117,18 @@ void Roll_Clock()
 			Hour.Shi_Last=Hour.Last/10;
 			Hour.Shi_New=Hour.New/10;
 			
+			// 判定每一位是否存在变化
 			Sec.Ge_Roll_Flag=1;
+			if (Sec.Shi_Last  != Sec.Shi_New ) Sec.Shi_Roll_Flag  = 1;
+			if (Min.Ge_Last   != Min.Ge_New  ) Min.Ge_Roll_Flag   = 1;
+			if (Min.Shi_Last  != Min.Shi_New ) Min.Shi_Roll_Flag  = 1;
+			if (Hour.Ge_Last  != Hour.Ge_New ) Hour.Ge_Roll_Flag  = 1;
+			if (Hour.Shi_Last != Hour.Shi_New) Hour.Shi_Roll_Flag = 1;
 			
-			if (Sec.Ge_Last==9 && Sec.Ge_New==0) Sec.Shi_Roll_Flag=1;
-			
-			if (Sec.Shi_Last==5 && Sec.Shi_New==0) Min.Ge_Roll_Flag=1;
-			
-			if (Min.Ge_Last==9 && Min.Ge_New==0) Min.Shi_Roll_Flag=1;
-		
-			if (Min.Shi_Last==5 && Min.Shi_New==0) Hour.Ge_Roll_Flag=1;
-		
-			if ((Hour.Ge_Last==9 && Hour.Ge_New==0) || (Hour.Ge_Last==3 && Hour.Ge_New==0))Hour.Shi_Roll_Flag=1;
-			
+			// 滚动显示操作
 			OLED_Roll();
 		}
 		Sec.Last=Sec.New;
 		Min.Last=Min.New;
 		Hour.Last=Hour.New;
-
 }

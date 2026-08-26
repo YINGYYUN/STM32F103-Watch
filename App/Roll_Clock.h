@@ -10,24 +10,25 @@
 
 #include <stdint.h>
 
+// 滚动时钟显示结构体
 typedef struct {
 	
-	uint8_t Last;
-	uint8_t New;
+	uint8_t Last;			// 旧值
+	uint8_t New;			// 新值
+					
+	uint8_t Ge_Last;		// 个位旧值
+	uint8_t Ge_New;			// 个位新值
 	
-	uint8_t Ge_Last;
-	uint8_t Ge_New;
+	uint8_t Shi_Last;		// 十位旧值
+	uint8_t Shi_New;		// 十位新值
 	
-	uint8_t Shi_Last;
-	uint8_t Shi_New;
+	uint8_t Ge_Roll_Flag;	// 个位滚动标志位
+	uint8_t Shi_Roll_Flag;	// 十位滚动标志位
 	
-	uint8_t Ge_Roll_Flag;
-	uint8_t Shi_Roll_Flag;
+	int8_t Ge_Y;			// 个位Y坐标
+	int8_t Shi_Y;			// 十位Y坐标
 	
-	int8_t Ge_Y;
-	int8_t Shi_Y;
-	
-}Clock;
+}Clock;						
 
 void 	Roll_Clock_Init	(void);
 void 	Roll_Clock		(void);
